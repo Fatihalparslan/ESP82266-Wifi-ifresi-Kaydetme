@@ -15,11 +15,14 @@ char password[30]= "";
 
 void stamod(){
   for(i=0;i<100;i++){
-  delay(1000);
+  delay(100);
   }
 WiFi.disconnect();
 WiFi.mode(WIFI_STA);
-WiFi.begin(ssid,password);
+stamoddurum=WiFi.begin(ssid,password);
+if(stamoddurum!=0){
+  apmoddurum=0;
+}
   }
 
 void setup() {
@@ -29,20 +32,17 @@ EEPROM.begin(512);
 read_string(30,0).toCharArray(ssid,30); 
 read_string(30,100).toCharArray(password,30); 
 for(j=0;j<10;j++){
-     status = WiFi.begin(ssid, password);
+status = WiFi.begin(ssid, password);
     // wait 10 seconds for connection:
-    delay(1000);
+    delay(100);
 }
 if (status==true){
   stamod();
   }else{
- Serial.println(conn);
-Serial.println(ssid);
-Serial.println(password);
 apmoddurum=WiFi.softAP(APssid, APpassword);
 stamoddurum=false;
   }
-  Serial.println(conn);
+Serial.println(apmoddurum);
 Serial.println(ssid);
 Serial.println(password);
 //stamod();
@@ -63,12 +63,13 @@ void loop() {
       while (client.available()) {
         char c = client.read();
         Serial.write(c);
+
+        
   if(c=='#'){
-    degis==true;
+    degis=true;
     i=0;
-    }
-  
- if(degis==false){
+    }else{
+  if(degis==false){
     wifiadi[i]=c;
     i++;
     }else{
@@ -77,12 +78,14 @@ void loop() {
     }
     }
     }
+    }
     degis=false;
     i=0;
     
     client.stop();
   write_to_Memory(String(wifiadi),String(pass));
- 
+  
+stamod();
   }
   
   }
